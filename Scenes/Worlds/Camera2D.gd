@@ -62,11 +62,6 @@ func _detect_mouse_location() -> void:
 		camera_body.mouse_move(multiplier, vec, mouse_move_active)
 	else:
 		camera_body.mouse_move_active = mouse_move_active
-	#to scroll up we want to detect the top 20% of the upper half of the screen
-	#so scroll_start_line = screen_edges[-1,0].y + viewport_size.y * 0.2
-	#now went the screen edge to be -1 so screen_edge[-1,0].y/abs(screen_edge[-1,0].y
-	#that get's us a multiplier
-	#so if mouse is move past line, multpli speed by multiplier
 	
 func _zoom(sign: int) -> void:
 	var tween: Tween = get_tree().create_tween().set_trans(Tween.TRANS_SINE)\
