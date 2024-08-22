@@ -1,0 +1,6 @@
+[gd_resource type="Resource" script_class="PriestStats" load_steps=2 format=3 uid="uid://bp2oddohvouc6"]
+
+[ext_resource type="Script" path="res://Stats/priest.gd" id="1_j2v3u"]
+
+[resource]
+script = ExtResource("1_j2v3u")

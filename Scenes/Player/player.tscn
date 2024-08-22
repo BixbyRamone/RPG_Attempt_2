@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://dxy2ux160k1uq"]
+
+[ext_resource type="Script" path="res://Scenes/Player/player.gd" id="1_pecky"]
+[ext_resource type="Texture2D" uid="uid://dvnw4spdyguud" path="res://Assets/Characters/cleric.png" id="2_xeahf"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_vgbgh"]
+radius = 3.0
+height = 18.0
+
+[node name="Player" type="CharacterBody2D"]
+motion_mode = 1
+script = ExtResource("1_pecky")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_vgbgh")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(2.08165e-12, -14)
+texture = ExtResource("2_xeahf")

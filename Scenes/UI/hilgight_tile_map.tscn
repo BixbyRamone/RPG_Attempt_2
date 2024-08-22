@@ -1,0 +1,102 @@
+[gd_scene load_steps=8 format=3 uid="uid://cmyf1nr0wo0j5"]
+
+[ext_resource type="Texture2D" uid="uid://hj6all3utkg1" path="res://Assets/UI/tile_highlite.png" id="1_umdbg"]
+[ext_resource type="Texture2D" uid="uid://cymm0uusaf2ry" path="res://Assets/UI/tile_arrows.png" id="2_ts34h"]
+[ext_resource type="Script" path="res://Scenes/Worlds/Hilgight_TileMap.gd" id="3_mpqt4"]
+[ext_resource type="Script" path="res://Scenes/UI/Arrows.gd" id="4_scip5"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_6b2uq"]
+texture = ExtResource("1_umdbg")
+texture_region_size = Vector2i(32, 16)
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_sr3my"]
+texture = ExtResource("2_ts34h")
+texture_region_size = Vector2i(32, 16)
+0:0/0 = 0
+0:0/0/terrain_set = 0
+0:0/0/terrain = 0
+0:0/0/terrains_peering_bit/bottom_left_side = 0
+0:0/0/terrains_peering_bit/top_right_side = 0
+1:0/0 = 0
+1:0/0/terrain_set = 0
+1:0/0/terrain = 0
+1:0/0/terrains_peering_bit/bottom_right_side = 0
+1:0/0/terrains_peering_bit/top_left_side = 0
+0:1/0 = 0
+0:1/0/terrain_set = 0
+0:1/0/terrain = 0
+0:1/0/terrains_peering_bit/bottom_right_side = 0
+0:1/0/terrains_peering_bit/bottom_left_side = 0
+1:1/0 = 0
+1:1/0/terrain_set = 0
+1:1/0/terrain = 0
+1:1/0/terrains_peering_bit/top_left_side = 0
+1:1/0/terrains_peering_bit/top_right_side = 0
+0:2/0 = 0
+0:2/0/terrain_set = 0
+0:2/0/terrain = 0
+0:2/0/terrains_peering_bit/bottom_right_side = 0
+0:2/0/terrains_peering_bit/top_right_side = 0
+1:2/0 = 0
+1:2/0/terrain_set = 0
+1:2/0/terrain = 0
+1:2/0/terrains_peering_bit/bottom_left_side = 0
+1:2/0/terrains_peering_bit/top_left_side = 0
+0:3/0 = 0
+0:3/0/terrain_set = 0
+0:3/0/terrain = 0
+0:3/0/terrains_peering_bit/top_right_side = 0
+1:3/0 = 0
+1:3/0/terrain_set = 0
+1:3/0/terrain = 0
+1:3/0/terrains_peering_bit/top_left_side = 0
+0:4/0 = 0
+0:4/0/terrain_set = 0
+0:4/0/terrain = 0
+0:4/0/terrains_peering_bit/bottom_right_side = 0
+1:4/0 = 0
+1:4/0/terrain_set = 0
+1:4/0/terrain = 0
+1:4/0/terrains_peering_bit/bottom_left_side = 0
+2:0/0 = 0
+2:0/0/terrain_set = 0
+2:0/0/terrain = 0
+2:1/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_dtoid"]
+tile_shape = 1
+tile_layout = 4
+tile_size = Vector2i(32, 16)
+terrain_set_0/mode = 2
+terrain_set_0/terrain_0/name = "ArrowAuto"
+terrain_set_0/terrain_0/color = Color(0.695616, 0.0894881, 0.29646, 1)
+sources/0 = SubResource("TileSetAtlasSource_6b2uq")
+sources/1 = SubResource("TileSetAtlasSource_sr3my")
+
+[node name="Hilgight_TileMap" type="TileMap"]
+y_sort_enabled = true
+tile_set = SubResource("TileSet_dtoid")
+format = 2
+layer_0/y_sort_enabled = true
+script = ExtResource("3_mpqt4")
+
+[node name="FloodFill" type="TileMap" parent="."]
+y_sort_enabled = true
+tile_set = SubResource("TileSet_dtoid")
+format = 2
+layer_0/y_sort_enabled = true
+
+[node name="Arrows" type="TileMap" parent="."]
+y_sort_enabled = true
+tile_set = SubResource("TileSet_dtoid")
+format = 2
+layer_0/y_sort_enabled = true
+script = ExtResource("4_scip5")
+
+[node name="Label" type="Label" parent="."]
+offset_top = -60.0
+offset_right = 40.0
+offset_bottom = -37.0

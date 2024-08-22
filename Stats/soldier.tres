@@ -1,0 +1,6 @@
+[gd_resource type="Resource" script_class="SoldierStats" load_steps=2 format=3 uid="uid://xffqpyuvq37v"]
+
+[ext_resource type="Script" path="res://Stats/soldier.gd" id="1_gcylu"]
+
+[resource]
+script = ExtResource("1_gcylu")

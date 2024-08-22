@@ -1,0 +1,49 @@
+[gd_scene load_steps=9 format=3 uid="uid://c0wowhietjf58"]
+
+[ext_resource type="Script" path="res://Scenes/Worlds/gameboard.gd" id="1_o5a7u"]
+[ext_resource type="PackedScene" uid="uid://8mc4j58mssb7" path="res://Scenes/Worlds/level.tscn" id="2_nawbd"]
+[ext_resource type="PackedScene" uid="uid://cmyf1nr0wo0j5" path="res://Scenes/UI/hilgight_tile_map.tscn" id="3_vj1px"]
+[ext_resource type="PackedScene" uid="uid://dxy2ux160k1uq" path="res://Scenes/Player/player.tscn" id="4_wfopi"]
+[ext_resource type="Script" path="res://Scenes/Worlds/Camera2D.gd" id="5_7eakl"]
+[ext_resource type="Script" path="res://StateMachine/Finite_State_Machine.gd" id="5_8rv2l"]
+[ext_resource type="Texture2D" uid="uid://bdoxa0r3n6ioc" path="res://icon.svg" id="6_44ubs"]
+[ext_resource type="Script" path="res://StateMachine/Player_Turn_State.gd" id="6_336on"]
+
+[node name="Gameboard" type="Node2D"]
+script = ExtResource("1_o5a7u")
+level = ExtResource("2_nawbd")
+
+[node name="Hilgight_TileMap" parent="." instance=ExtResource("3_vj1px")]
+
+[node name="Player" parent="." groups=["Player"] instance=ExtResource("4_wfopi")]
+position = Vector2(2.08165e-12, 2.08165e-12)
+
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="Player"]
+remote_path = NodePath("../../Camera2D")
+
+[node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("camera_body")]
+position = Vector2(2.08165e-12, 2.08165e-12)
+zoom = Vector2(6, 6)
+script = ExtResource("5_7eakl")
+camera_body = NodePath("../Player")
+
+[node name="Marker2D" type="Marker2D" parent="Camera2D"]
+position = Vector2(2.08165e-12, -50)
+
+[node name="Sprite2D" type="Sprite2D" parent="Camera2D/Marker2D"]
+scale = Vector2(0.05, 0.05)
+texture = ExtResource("6_44ubs")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+
+[node name="Timer" type="Timer" parent="."]
+one_shot = true
+
+[node name="FiniteStateMachine" type="Node" parent="." node_paths=PackedStringArray("state")]
+script = ExtResource("5_8rv2l")
+state = NodePath("PlayerTurnState")
+
+[node name="PlayerTurnState" type="Node" parent="FiniteStateMachine"]
+script = ExtResource("6_336on")
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

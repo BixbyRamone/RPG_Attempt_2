@@ -1,0 +1,104 @@
+[gd_scene load_steps=8 format=3 uid="uid://dkb1hiwpspai2"]
+
+[ext_resource type="Texture2D" uid="uid://dyg88o6yhmkeo" path="res://Assets/Tiles/grass.png" id="1_yj3oj"]
+[ext_resource type="PackedScene" uid="uid://dxy2ux160k1uq" path="res://Scenes/Player/player.tscn" id="2_5wtwy"]
+[ext_resource type="Texture2D" uid="uid://b02jx8lrlvi6g" path="res://Assets/Tiles/iso_test_0.png" id="2_g8wsl"]
+[ext_resource type="Script" path="res://Scenes/Worlds/IsoMap.gd" id="3_7je58"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_m10rb"]
+texture = ExtResource("2_g8wsl")
+0:0/size_in_atlas = Vector2i(8, 3)
+0:0/0 = 0
+0:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
+0:0/0/physics_layer_0/angular_velocity = 0.0
+8:0/size_in_atlas = Vector2i(8, 3)
+8:0/0 = 0
+8:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
+8:0/0/physics_layer_0/angular_velocity = 0.0
+8:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(0, -24, -64, -8, 0, 8, 64, -8)
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_cia0d"]
+texture = ExtResource("1_yj3oj")
+texture_region_size = Vector2i(128, 32)
+0:0/size_in_atlas = Vector2i(1, 2)
+0:0/0 = 0
+0:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
+0:0/0/physics_layer_0/angular_velocity = 0.0
+1:0/size_in_atlas = Vector2i(1, 2)
+1:0/0 = 0
+1:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
+1:0/0/physics_layer_0/angular_velocity = 0.0
+2:0/size_in_atlas = Vector2i(1, 2)
+2:0/0 = 0
+2:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
+2:0/0/physics_layer_0/angular_velocity = 0.0
+3:0/size_in_atlas = Vector2i(1, 2)
+3:0/0 = 0
+3:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
+3:0/0/physics_layer_0/angular_velocity = 0.0
+4:0/size_in_atlas = Vector2i(1, 2)
+4:0/0 = 0
+4:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
+4:0/0/physics_layer_0/angular_velocity = 0.0
+5:0/size_in_atlas = Vector2i(1, 2)
+5:0/0 = 0
+5:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
+5:0/0/physics_layer_0/angular_velocity = 0.0
+6:0/size_in_atlas = Vector2i(1, 2)
+6:0/0 = 0
+6:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
+6:0/0/physics_layer_0/angular_velocity = 0.0
+7:0/size_in_atlas = Vector2i(1, 2)
+7:0/0 = 0
+7:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
+7:0/0/physics_layer_0/angular_velocity = 0.0
+8:0/size_in_atlas = Vector2i(1, 2)
+8:0/0 = 0
+8:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
+8:0/0/physics_layer_0/angular_velocity = 0.0
+9:0/size_in_atlas = Vector2i(1, 2)
+9:0/0 = 0
+9:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
+9:0/0/physics_layer_0/angular_velocity = 0.0
+0:2/size_in_atlas = Vector2i(1, 2)
+0:2/0 = 0
+0:2/0/physics_layer_0/linear_velocity = Vector2(0, 0)
+0:2/0/physics_layer_0/angular_velocity = 0.0
+1:2/size_in_atlas = Vector2i(1, 2)
+1:2/0 = 0
+1:2/0/y_sort_origin = 14
+1:2/0/physics_layer_0/linear_velocity = Vector2(0, 0)
+1:2/0/physics_layer_0/angular_velocity = 0.0
+
+[sub_resource type="TileSet" id="TileSet_wxbo0"]
+tile_shape = 1
+tile_layout = 5
+tile_size = Vector2i(128, 32)
+physics_layer_0/collision_layer = 1
+sources/0 = SubResource("TileSetAtlasSource_m10rb")
+sources/2 = SubResource("TileSetAtlasSource_cia0d")
+
+[node name="Town" type="Node2D"]
+
+[node name="TileMap" type="TileMap" parent="."]
+y_sort_enabled = true
+texture_filter = 1
+tile_set = SubResource("TileSet_wxbo0")
+format = 2
+layer_0/name = "Ground"
+layer_0/y_sort_enabled = true
+layer_1/name = "Object"
+layer_1/y_sort_enabled = true
+layer_1/tile_data = PackedInt32Array()
+script = ExtResource("3_7je58")
+
+[node name="Player" parent="." instance=ExtResource("2_5wtwy")]
+y_sort_enabled = true
+position = Vector2(300, 2.08165e-12)
+
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="Player"]
+remote_path = NodePath("../../Camera2D")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(300, 2.08165e-12)
+zoom = Vector2(4, 4)
