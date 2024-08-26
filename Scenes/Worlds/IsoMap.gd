@@ -42,7 +42,7 @@ func _on_timer_timeout():
 	accepting_clicks = true
 
 func return_move_array_sans_obstructions(move_cells: Array) -> Array:
-	var original_cells: Array = move_cells
+	#var original_cells: Array = move_cells
 	var result: Array = []
 	for cell in move_cells:
 		if get_cell_source_id(0, cell) != -1:

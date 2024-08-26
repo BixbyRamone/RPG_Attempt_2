@@ -12,12 +12,19 @@ const DIRECTIONS = [
 @export var move_range: int
 @export var move_speed: float = 100.0
 @export var stats: Resource
+@export var active_behavior_state: State
 
 signal walk_finished
 signal select_unit
+signal destination
 
 var tilemap: Level
 var gameboard: GameBoard
+var saved_flooded_tiles: Array = []
+
+@onready var fsm: FiniteStateMachine = $UnitFiniteStateMachine
+@onready var static_behavior: State = $UnitFiniteStateMachine/StaticBehavior
+
 
 @onready var _anim_player: AnimationPlayer = $AnimationPlayer
 @onready var _path: Path2D = $Path2D
@@ -46,6 +53,7 @@ var is_walking: bool = false:
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	active_behavior_state.signal_dest_to_unit.connect(signal_dest_to_board)
 	_anim_player.play("Idle")
 	move_range = stats.move
 	_sprite.texture = stats.skin
@@ -77,7 +85,6 @@ func walk_along(path: PackedVector2Array) -> void:
 func unit_return_flood() -> Array:
 	var result: Array = []
 	var queue: Array = [cell]
-	var visited: Dictionary = {}
 	
 	while not queue.is_empty():
 		var current: Vector2i = queue.pop_back()
@@ -106,4 +113,9 @@ func unit_return_flood() -> Array:
 			
 	return result
 
+func activate(flooded_tiles: Array) -> void:
+	active_behavior_state.tiles_to_choose = flooded_tiles
+	fsm.change_state(active_behavior_state)
 
+func signal_dest_to_board(signal_cell: Vector2i) -> void:
+	destination.emit(signal_cell)

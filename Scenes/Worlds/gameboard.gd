@@ -17,11 +17,12 @@ var walkable_cells: Array = []
 @onready var _gametracker: GameTracker = $GameTracker
 @onready var _status_label: Label = $Camera2D/Label
 @onready var _hilight: TileHighlight = $Hilgight_TileMap
-@onready var _load_timer: Timer = $Timer
+@onready var _npc_delay_timer: Timer = $Timer
 @onready var _unit_path: UnitPath = $Hilgight_TileMap/Arrows
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	_status_label.text = str(_gametracker.player_status)
+	npc_turn_state.end_turn.connect(fsm.change_state.bind(player_turn_state))
 	_gametracker.new_status_number.connect(change_status_number)
 	level_instance = level.instantiate()
 	add_child(level_instance)
@@ -29,9 +30,11 @@ func _ready():
 	_hilight.check_cell_clickable.connect(set_highlight_clickable)
 	_hilight.signal_attach_board.connect(attach_board_to_highlights)
 	_initiate()
+	for element in unit_dict:
+		unit_dict[element].destination.connect(draw_non_player_unit_path)
 	
 
-func _check_dict_for_unit(cell: Vector2i) -> void:
+func _check_dict_for_unit(_cell: Vector2i) -> void:
 	pass
 	
 func _initiate() -> void:
@@ -61,6 +64,7 @@ func set_highlight_clickable(cell: Vector2i) -> void:
 	if active_unit and active_unit.is_selected:
 		if fsm.state is PlayerTurnState:
 			_unit_path.draw(active_unit.cell, cell)
+		
 
 func attach_board_to_highlights() -> void:
 	_hilight.tile_board = level_instance
@@ -76,17 +80,19 @@ func _select_unit(cell: Vector2i) -> void:
 	if !active_unit.is_selected:
 		active_unit.is_selected = true
 		#need to check if unit belongs to player
-		var flood_fill: Array = flood_fill(active_unit.cell, active_unit.move_range)
-		walkable_cells = flood_fill
+		var flood_fill_array: Array = flood_fill(active_unit.cell, active_unit.move_range)
+		walkable_cells = flood_fill_array
 		#flood_fill = level_instance.return_move_array_sans_obstructions(flood_fill)
-		_hilight.flood_fill_highlight(flood_fill, active_unit.cell, active_unit.move_range)
+		_hilight.flood_fill_highlight(flood_fill_array, active_unit.cell)
+		if active_unit.stats.owner != "Player":
+			active_unit.activate(flood_fill_array)
 
 func auto_select_unit(cell: Vector2i) -> Array:
 	_select_unit(cell)
 	var flood_fill_array: Array = flood_fill(active_unit.cell, active_unit.move_range)
 	return flood_fill_array
 	
-func _deselect_active_unit(cell: Vector2i) -> void:
+func _deselect_active_unit(_cell: Vector2i) -> void:
 	active_unit.is_selected = false
 	_hilight.clear_flood_fill()
 	_unit_path.stop()
@@ -141,7 +147,6 @@ func flood_fill(cell: Vector2i, max_distance: int) -> Array:
 func array_check(flood_array: Array, max_dist: int, origin: Vector2i) -> Array:
 	var pathfinder = PathFinder.new(level_instance, flood_array)
 	var erase_array: Array = []
-	var i = 0
 	for cell in flood_array:
 		var path_count = pathfinder.calculate_point_path(origin, cell)
 		if path_count.size() > max_dist + 1:
@@ -177,3 +182,9 @@ func _check_for_wrong_state() -> bool:
 	
 func _on_texture_button_pressed():
 	fsm.change_state(npc_turn_state)
+
+func draw_non_player_unit_path(dest_cell) -> void:
+	_unit_path.draw(active_unit.cell, dest_cell)
+	await get_tree().create_timer(1).timeout
+	_move_active_unit(dest_cell)
+	npc_turn_state.run_npc_moves()

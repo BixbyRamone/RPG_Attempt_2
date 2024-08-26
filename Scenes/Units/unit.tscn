@@ -1,10 +1,8 @@
-[gd_scene load_steps=10 format=3 uid="uid://ctpycwrvwv0kl"]
+[gd_scene load_steps=8 format=3 uid="uid://ctpycwrvwv0kl"]
 
 [ext_resource type="Script" path="res://Scenes/Units/unit.gd" id="1_vivxp"]
 [ext_resource type="Script" path="res://Scenes/Units/sprite_setter.gd" id="2_r58js"]
-[ext_resource type="Script" path="res://StateMachine/Finite_State_Machine.gd" id="3_86wko"]
-[ext_resource type="Script" path="res://StateMachine/Behaviors/static.gd" id="4_q3t3i"]
-[ext_resource type="Script" path="res://StateMachine/Behaviors/labrorer_npc.gd" id="4_qlt11"]
+[ext_resource type="PackedScene" uid="uid://4hvscr7tbpd8" path="res://StateMachine/MachineScenes/unit_finite_state_machine.tscn" id="3_lfo21"]
 
 [sub_resource type="Animation" id="Animation_ggrkn"]
 resource_name = "Idle"
@@ -96,8 +94,9 @@ _data = {
 "Selected": SubResource("Animation_itgqc")
 }
 
-[node name="Unit" type="Node2D"]
+[node name="Unit" type="Node2D" node_paths=PackedStringArray("active_behavior_state")]
 script = ExtResource("1_vivxp")
+active_behavior_state = NodePath("UnitFiniteStateMachine/LaborerNPC")
 
 [node name="Path2D" type="Path2D" parent="."]
 
@@ -115,13 +114,7 @@ libraries = {
 "": SubResource("AnimationLibrary_06j2u")
 }
 
-[node name="FiniteStateMachine" type="Node" parent="." node_paths=PackedStringArray("state")]
-script = ExtResource("3_86wko")
+[node name="UnitFiniteStateMachine" parent="." node_paths=PackedStringArray("state") instance=ExtResource("3_lfo21")]
 state = NodePath("StaticBehavior")
 
-[node name="StaticBehavior" type="Node" parent="FiniteStateMachine"]
-script = ExtResource("4_q3t3i")
-
-[node name="LaborerNPC" type="Node" parent="FiniteStateMachine" node_paths=PackedStringArray("unit")]
-script = ExtResource("4_qlt11")
-unit = NodePath("../..")
+[editable path="UnitFiniteStateMachine"]

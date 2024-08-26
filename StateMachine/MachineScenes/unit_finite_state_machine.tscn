@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=3 uid="uid://4hvscr7tbpd8"]
+
+[ext_resource type="Script" path="res://StateMachine/Finite_State_Machine.gd" id="1_cpwca"]
+[ext_resource type="Script" path="res://StateMachine/Behaviors/static.gd" id="2_86slb"]
+[ext_resource type="Script" path="res://StateMachine/Behaviors/labrorer_npc.gd" id="3_377bm"]
+
+[node name="UnitFiniteStateMachine" type="Node" node_paths=PackedStringArray("state")]
+script = ExtResource("1_cpwca")
+state = NodePath("")
+
+[node name="StaticBehavior" type="Node" parent="."]
+script = ExtResource("2_86slb")
+
+[node name="LaborerNPC" type="Node" parent="." node_paths=PackedStringArray("unit")]
+script = ExtResource("3_377bm")
+unit = NodePath("")

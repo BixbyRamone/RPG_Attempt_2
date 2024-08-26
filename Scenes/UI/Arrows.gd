@@ -6,7 +6,6 @@ const DIRECTIONS = [Vector2.LEFT, Vector2.RIGHT, Vector2.UP, Vector2.DOWN]
 var level_tiles: Level
 var _pathfinder: PathFinder
 var current_path: PackedVector2Array
-
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pass

@@ -19,7 +19,7 @@ func _ready() -> void:
 	#viewport_size = get_viewport_rect().size
 	get_tree().root.connect("size_changed", _on_veiwport_size_changed)
 	
-func _physics_process(delta):
+func _physics_process(_delta):
 	if Input.is_action_just_pressed("zoom_in"):
 		_zoom(1)
 	if Input.is_action_just_pressed("zoom_out"):
@@ -63,7 +63,7 @@ func _detect_mouse_location() -> void:
 	else:
 		camera_body.mouse_move_active = mouse_move_active
 	
-func _zoom(sign: int) -> void:
+func _zoom(direction_sign: int) -> void:
 	var tween: Tween = get_tree().create_tween().set_trans(Tween.TRANS_SINE)\
 	.set_ease(Tween.EASE_OUT)
-	tween.tween_property(self, "zoom", zoom + zoom_step * sign, zoom_speed)
+	tween.tween_property(self, "zoom", zoom + zoom_step * direction_sign, zoom_speed)

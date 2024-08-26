@@ -5,7 +5,6 @@ class_name TileHighlight
 
 var cell_is_clickable: bool = true
 var cell_is_active: bool = false
-var state: State
 
 signal check_cell_clickable
 signal signal_attach_board
@@ -38,7 +37,7 @@ func _highlight_cell() -> void:
 func set_highlitable(bul: bool) -> void:
 	cell_is_clickable = bul
 
-func flood_fill_highlight(flood_array: Array, unit_cell: Vector2i, max_distance: int) -> void:
+func flood_fill_highlight(flood_array: Array, unit_cell: Vector2i) -> void:
 	_arrow.initialize(flood_array)
 	if tile_board != null:
 		signal_attach_board.emit()
@@ -50,3 +49,4 @@ func flood_fill_highlight(flood_array: Array, unit_cell: Vector2i, max_distance:
 
 func clear_flood_fill() -> void:
 	_flood_fill.clear()
+

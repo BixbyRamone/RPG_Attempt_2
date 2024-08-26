@@ -1,6 +1,8 @@
 extends State
 class_name NPCTurnState
 
+signal end_turn
+
 @export var gameboard: GameBoard
 
 var timer_0:Timer = Timer.new()
@@ -13,19 +15,23 @@ func _ready():
 
 func enter() -> void:
 	set_physics_process(true)
+	for unit in gameboard.unit_dict:
+		if gameboard.unit_dict[unit].stats.owner == "NPC":
+			npc_units.append(unit)
 	add_child(timer_0)
-	timer_0.one_shot = true
-	timer_0.connect("timeout", _on_timer0_timeout)
-	timer_0.start(timer_0_time)
+	await get_tree().create_timer(1).timeout
+	run_npc_moves()
 	
 func exit() -> void:
 	set_physics_process(false)
 	
 func _on_timer0_timeout() -> void:
-	var rng: RandomNumberGenerator = RandomNumberGenerator.new()
-	var test = gameboard.unit_dict
-	for unit in gameboard.unit_dict:
-		if gameboard.unit_dict[unit].stats.owner == "NPC":
-			npc_units.append(unit)
-	var npc_move_options: Array = gameboard.auto_select_unit(npc_units[0])
+	run_npc_moves()
 			
+func run_npc_moves() -> void:
+	
+	if npc_units.size() > 0:
+		var npc_move_options: Array = gameboard.auto_select_unit(npc_units[0])
+		npc_units.pop_front()
+	else:
+		end_turn.emit()
