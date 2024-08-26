@@ -5,10 +5,10 @@ class_name TileHighlight
 
 var cell_is_clickable: bool = true
 var cell_is_active: bool = false
+var state: State
 
 signal check_cell_clickable
 signal signal_attach_board
-signal cursor_moved
 # Called when the node enters the scene tree for the first time.
 @onready var _label = $Label
 @onready var _flood_fill: TileMap = $FloodFill
@@ -26,7 +26,6 @@ func _process(_delta):
 func _highlight_cell() -> void:
 	var tile_pos: Vector2i = local_to_map(get_local_mouse_position())
 	check_cell_clickable.emit(tile_pos)
-	cursor_moved.emit()
 	_label.text = str(tile_pos)
 	#set_cell(0, tile_pos, 0, Vector2i(0,0))
 	var used_cell_array: Array[Vector2i] = get_used_cells(0)

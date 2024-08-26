@@ -14,6 +14,7 @@ const DIRECTIONS = [
 @export var stats: Resource
 
 signal walk_finished
+signal select_unit
 
 var tilemap: Level
 var gameboard: GameBoard

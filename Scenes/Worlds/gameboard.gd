@@ -12,20 +12,23 @@ var walkable_cells: Array = []
 
 @onready var fsm: FiniteStateMachine = $FiniteStateMachine
 @onready var player_turn_state: PlayerTurnState = $FiniteStateMachine/PlayerTurnState
+@onready var npc_turn_state: NPCTurnState = $FiniteStateMachine/NPCTurnState
 
+@onready var _gametracker: GameTracker = $GameTracker
+@onready var _status_label: Label = $Camera2D/Label
 @onready var _hilight: TileHighlight = $Hilgight_TileMap
 @onready var _load_timer: Timer = $Timer
 @onready var _unit_path: UnitPath = $Hilgight_TileMap/Arrows
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	_status_label.text = str(_gametracker.player_status)
+	_gametracker.new_status_number.connect(change_status_number)
 	level_instance = level.instantiate()
 	add_child(level_instance)
-	level_instance.connect("tile_selected", tile_clicked)
-	#level_instance.connect("initiate", _initiate)
-	_hilight.connect("check_cell_clickable", set_highlight_clickable)
-	#_hilight.connect("cursor_moved", on_cursor_moved)
-	_hilight.connect("signal_attach_board", attach_board_to_highlights)
-	_load_timer.start()
+	level_instance.tile_selected.connect(tile_clicked)
+	_hilight.check_cell_clickable.connect(set_highlight_clickable)
+	_hilight.signal_attach_board.connect(attach_board_to_highlights)
+	_initiate()
 	
 
 func _check_dict_for_unit(cell: Vector2i) -> void:
@@ -41,14 +44,10 @@ func tile_clicked(cell: Vector2i) -> void:
 		return
 	if is_occupied(cell):
 		_select_unit(cell)
-	#if !is_occupied(cell) and active_unit != null:
-		#_deselect_active_unit(cell)
 	elif active_unit:
 		if active_unit.is_selected:
 			_move_active_unit(cell)
-#func on_cursor_moved() -> void:
-	#if active_unit and active_unit.is_selected:
-		#_unit_path.draw()
+
 func reinitialize() -> void:
 	unit_dict.clear()
 	for child in level_instance.return_preplaced_units():
@@ -60,7 +59,8 @@ func reinitialize() -> void:
 func set_highlight_clickable(cell: Vector2i) -> void:
 	_hilight.set_highlitable(level_instance.check_tile_status(cell))
 	if active_unit and active_unit.is_selected:
-		_unit_path.draw(active_unit.cell, cell)
+		if fsm.state is PlayerTurnState:
+			_unit_path.draw(active_unit.cell, cell)
 
 func attach_board_to_highlights() -> void:
 	_hilight.tile_board = level_instance
@@ -69,6 +69,10 @@ func _select_unit(cell: Vector2i) -> void:
 	if !unit_dict.has(cell):
 		return
 	active_unit = unit_dict[cell]
+	if _check_status_requirements():
+		return
+	if _check_for_wrong_state():
+		return
 	if !active_unit.is_selected:
 		active_unit.is_selected = true
 		#need to check if unit belongs to player
@@ -76,6 +80,11 @@ func _select_unit(cell: Vector2i) -> void:
 		walkable_cells = flood_fill
 		#flood_fill = level_instance.return_move_array_sans_obstructions(flood_fill)
 		_hilight.flood_fill_highlight(flood_fill, active_unit.cell, active_unit.move_range)
+
+func auto_select_unit(cell: Vector2i) -> Array:
+	_select_unit(cell)
+	var flood_fill_array: Array = flood_fill(active_unit.cell, active_unit.move_range)
+	return flood_fill_array
 	
 func _deselect_active_unit(cell: Vector2i) -> void:
 	active_unit.is_selected = false
@@ -87,6 +96,7 @@ func _clear_active_unit() -> void:
 	walkable_cells.clear()
 
 func _move_active_unit(new_cell: Vector2i) -> void:
+	_gametracker.reduce_status(active_unit, fsm.state)
 	if is_occupied(new_cell) or not new_cell in walkable_cells:
 		return
 	unit_dict.erase(active_unit.cell)
@@ -139,3 +149,31 @@ func array_check(flood_array: Array, max_dist: int, origin: Vector2i) -> Array:
 	for cell in erase_array:
 		flood_array.erase(cell)
 	return flood_array
+
+func change_status_number(new_num: int) -> void:
+	_status_label.text = str(new_num)
+
+func _check_status_requirements() -> bool:
+	if fsm.state is PlayerTurnState:
+		if _gametracker.player_status == 0\
+		or _gametracker.player_status - active_unit.stats.status_reduction\
+		< 0:
+			return true
+	if fsm.state is EnemyTurnState:
+		if _gametracker.enemy_status == 0\
+		or _gametracker.enemy_status - active_unit.stats.status_reduction\
+		< 0:
+			return true
+	return false
+
+func _check_for_wrong_state() -> bool:
+	if active_unit.stats.owner == "Player" and fsm.state is PlayerTurnState:
+		return false
+	if active_unit.stats.owner == "NPC" and fsm.state is NPCTurnState:
+		return false
+	if active_unit.stats.owner == "Opponent" and fsm.state is EnemyTurnState:
+		return false
+	return true
+	
+func _on_texture_button_pressed():
+	fsm.change_state(npc_turn_state)

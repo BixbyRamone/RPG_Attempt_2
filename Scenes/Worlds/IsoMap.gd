@@ -12,7 +12,6 @@ var board_size: Vector2i
 @onready var _preplaced_units: Node2D = $PreplacedUnits
 
 signal tile_selected
-signal tile_selectable
 signal initiate
 # Called when the node enters the scene tree for the first time.
 func _process(_delta):

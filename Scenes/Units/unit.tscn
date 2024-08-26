@@ -1,7 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://ctpycwrvwv0kl"]
+[gd_scene load_steps=10 format=3 uid="uid://ctpycwrvwv0kl"]
 
 [ext_resource type="Script" path="res://Scenes/Units/unit.gd" id="1_vivxp"]
 [ext_resource type="Script" path="res://Scenes/Units/sprite_setter.gd" id="2_r58js"]
+[ext_resource type="Script" path="res://StateMachine/Finite_State_Machine.gd" id="3_86wko"]
+[ext_resource type="Script" path="res://StateMachine/Behaviors/static.gd" id="4_q3t3i"]
+[ext_resource type="Script" path="res://StateMachine/Behaviors/labrorer_npc.gd" id="4_qlt11"]
 
 [sub_resource type="Animation" id="Animation_ggrkn"]
 resource_name = "Idle"
@@ -95,7 +98,6 @@ _data = {
 
 [node name="Unit" type="Node2D"]
 script = ExtResource("1_vivxp")
-move_speed = 2.0
 
 [node name="Path2D" type="Path2D" parent="."]
 
@@ -112,3 +114,14 @@ script = ExtResource("2_r58js")
 libraries = {
 "": SubResource("AnimationLibrary_06j2u")
 }
+
+[node name="FiniteStateMachine" type="Node" parent="." node_paths=PackedStringArray("state")]
+script = ExtResource("3_86wko")
+state = NodePath("StaticBehavior")
+
+[node name="StaticBehavior" type="Node" parent="FiniteStateMachine"]
+script = ExtResource("4_q3t3i")
+
+[node name="LaborerNPC" type="Node" parent="FiniteStateMachine" node_paths=PackedStringArray("unit")]
+script = ExtResource("4_qlt11")
+unit = NodePath("../..")

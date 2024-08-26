@@ -1,16 +1,24 @@
-[gd_scene load_steps=8 format=3 uid="uid://c0wowhietjf58"]
+[gd_scene load_steps=13 format=3 uid="uid://c0wowhietjf58"]
 
 [ext_resource type="Script" path="res://Scenes/Worlds/gameboard.gd" id="1_o5a7u"]
 [ext_resource type="PackedScene" uid="uid://8mc4j58mssb7" path="res://Scenes/Worlds/level.tscn" id="2_nawbd"]
+[ext_resource type="Script" path="res://Scenes/Worlds/GameTracker.gd" id="3_2pcju"]
 [ext_resource type="PackedScene" uid="uid://cmyf1nr0wo0j5" path="res://Scenes/UI/hilgight_tile_map.tscn" id="3_vj1px"]
 [ext_resource type="PackedScene" uid="uid://dxy2ux160k1uq" path="res://Scenes/Player/player.tscn" id="4_wfopi"]
 [ext_resource type="Script" path="res://Scenes/Worlds/Camera2D.gd" id="5_7eakl"]
 [ext_resource type="Script" path="res://StateMachine/Finite_State_Machine.gd" id="5_8rv2l"]
 [ext_resource type="Script" path="res://StateMachine/Player_Turn_State.gd" id="6_336on"]
+[ext_resource type="Texture2D" uid="uid://7qxmj5nison2" path="res://Assets/UI/end_turn_up.png" id="7_bqmmx"]
+[ext_resource type="Texture2D" uid="uid://1qmfnsbjlvvh" path="res://Assets/UI/end_turn_down.png" id="8_5lfi0"]
+[ext_resource type="Script" path="res://StateMachine/Enemy_Turn_State.gd" id="8_ameps"]
+[ext_resource type="Script" path="res://StateMachine/NPC_Turn_State.gd" id="9_sfls2"]
 
 [node name="Gameboard" type="Node2D"]
 script = ExtResource("1_o5a7u")
 level = ExtResource("2_nawbd")
+
+[node name="GameTracker" type="Node2D" parent="."]
+script = ExtResource("3_2pcju")
 
 [node name="Hilgight_TileMap" parent="." instance=ExtResource("3_vj1px")]
 
@@ -26,6 +34,21 @@ zoom = Vector2(6, 6)
 script = ExtResource("5_7eakl")
 camera_body = NodePath("../Player")
 
+[node name="Label" type="Label" parent="Camera2D"]
+offset_left = -100.0
+offset_top = -80.0
+offset_right = -60.0
+offset_bottom = -57.0
+pivot_offset = Vector2(-80, -40)
+
+[node name="TextureButton" type="TextureButton" parent="Camera2D/Label"]
+layout_mode = 0
+offset_top = 20.0
+offset_right = 40.0
+offset_bottom = 60.0
+texture_normal = ExtResource("7_bqmmx")
+texture_pressed = ExtResource("8_5lfi0")
+
 [node name="Sprite2D" type="Sprite2D" parent="."]
 
 [node name="Timer" type="Timer" parent="."]
@@ -38,4 +61,12 @@ state = NodePath("PlayerTurnState")
 [node name="PlayerTurnState" type="Node" parent="FiniteStateMachine"]
 script = ExtResource("6_336on")
 
+[node name="EnemyTurnState" type="Node" parent="FiniteStateMachine"]
+script = ExtResource("8_ameps")
+
+[node name="NPCTurnState" type="Node" parent="FiniteStateMachine" node_paths=PackedStringArray("gameboard")]
+script = ExtResource("9_sfls2")
+gameboard = NodePath("../..")
+
+[connection signal="pressed" from="Camera2D/Label/TextureButton" to="." method="_on_texture_button_pressed"]
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

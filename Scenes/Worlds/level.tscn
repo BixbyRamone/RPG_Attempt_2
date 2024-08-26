@@ -1,13 +1,11 @@
-[gd_scene load_steps=12 format=3 uid="uid://8mc4j58mssb7"]
+[gd_scene load_steps=10 format=3 uid="uid://8mc4j58mssb7"]
 
 [ext_resource type="Texture2D" uid="uid://c0uvw0lgo02sj" path="res://Assets/Tiles/small_ground_tiles.png" id="1_ltq5d"]
 [ext_resource type="Texture2D" uid="uid://bssamqu5wpu5x" path="res://Assets/Tiles/small_water_tiles.png" id="2_nq7me"]
 [ext_resource type="Script" path="res://Scenes/Worlds/IsoMap.gd" id="3_4v4qf"]
 [ext_resource type="PackedScene" uid="uid://ctpycwrvwv0kl" path="res://Scenes/Units/unit.tscn" id="4_db3dp"]
 [ext_resource type="Resource" uid="uid://d0tr8vpwdl6yb" path="res://Stats/cleric.tres" id="5_ug186"]
-[ext_resource type="Resource" uid="uid://bp2oddohvouc6" path="res://Stats/priest.tres" id="6_3a7r4"]
-[ext_resource type="Resource" uid="uid://d5xu2a7tyclf" path="res://Stats/ranger.tres" id="7_fr1cb"]
-[ext_resource type="Resource" uid="uid://xffqpyuvq37v" path="res://Stats/soldier.tres" id="8_vtjag"]
+[ext_resource type="Resource" uid="uid://c2g2msp0gvf4v" path="res://Stats/laborer.tres" id="9_wscxq"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_spikk"]
 texture = ExtResource("1_ltq5d")
@@ -72,31 +70,13 @@ one_shot = true
 [node name="PreplacedUnits" type="Node2D" parent="."]
 
 [node name="Unit" parent="PreplacedUnits" instance=ExtResource("4_db3dp")]
-z_index = 1
-position = Vector2(110, 39)
+position = Vector2(62, 15)
 move_range = 3
-move_speed = 100.0
 stats = ExtResource("5_ug186")
 
 [node name="Unit2" parent="PreplacedUnits" instance=ExtResource("4_db3dp")]
-z_index = 1
-position = Vector2(208, 39)
-move_range = 4
-move_speed = 100.0
-stats = ExtResource("6_3a7r4")
-
-[node name="Unit3" parent="PreplacedUnits" instance=ExtResource("4_db3dp")]
-z_index = 1
-position = Vector2(191, 80)
-move_range = 6
-move_speed = 100.0
-stats = ExtResource("7_fr1cb")
-
-[node name="Unit4" parent="PreplacedUnits" instance=ExtResource("4_db3dp")]
-z_index = 1
-position = Vector2(177, -24)
+position = Vector2(144, 8)
 move_range = 3
-move_speed = 100.0
-stats = ExtResource("8_vtjag")
+stats = ExtResource("9_wscxq")
 
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

@@ -97,6 +97,7 @@ layer_0/y_sort_enabled = true
 script = ExtResource("4_scip5")
 
 [node name="Label" type="Label" parent="."]
+visible = false
 offset_top = -60.0
 offset_right = 40.0
 offset_bottom = -37.0
