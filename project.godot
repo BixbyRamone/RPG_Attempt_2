@@ -14,6 +14,7 @@ config/name="RPG_Attempt_2"
 run/main_scene="res://Scenes/Worlds/gameboard.tscn"
 config/features=PackedStringArray("4.2", "Forward Plus")
 config/icon="res://icon.svg"
+run/size/viewport_height=1296
 
 [display]
 

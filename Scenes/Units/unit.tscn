@@ -96,6 +96,7 @@ _data = {
 
 [node name="Unit" type="Node2D" node_paths=PackedStringArray("active_behavior_state")]
 script = ExtResource("1_vivxp")
+h_frame = null
 active_behavior_state = NodePath("UnitFiniteStateMachine/LaborerNPC")
 
 [node name="Path2D" type="Path2D" parent="."]

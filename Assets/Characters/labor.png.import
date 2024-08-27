@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cec2wrs0x2473"
-path="res://.godot/imported/laborer.png-59609866cb9665c4efa792ba35b55f8c.ctex"
+uid="uid://cy7b1sekswp8l"
+path="res://.godot/imported/labor.png-71b59b753f920cfebd311ced3f2dee29.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Characters/laborer.png"
-dest_files=["res://.godot/imported/laborer.png-59609866cb9665c4efa792ba35b55f8c.ctex"]
+source_file="res://Assets/Characters/labor.png"
+dest_files=["res://.godot/imported/labor.png-71b59b753f920cfebd311ced3f2dee29.ctex"]
 
 [params]
 

@@ -25,8 +25,7 @@ func _physics_process(_delta):
 	if Input.is_action_just_pressed("zoom_out"):
 		_zoom(-1)
 	if Input.is_action_just_pressed("ui_accept"):
-		print("vp_mouse_pos: " + str(get_viewport().get_mouse_position()))
-		print(thresholds)
+		position = Vector2.ZERO
 	
 	_detect_mouse_location()
 	

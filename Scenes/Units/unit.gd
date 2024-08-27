@@ -9,6 +9,7 @@ const DIRECTIONS = [
 	Vector2i(0, -1)  # Up
 ]
 #@export var grid: Resource = preload("res://Resources/Grid.tres")
+@export var h_frame: int
 @export var move_range: int
 @export var move_speed: float = 100.0
 @export var stats: Resource
@@ -58,10 +59,13 @@ func _ready():
 	move_range = stats.move
 	_sprite.texture = stats.skin
 	_sprite.skin_hframes = stats.skin_hframes
+	_sprite.frame = h_frame
 	set_process(false)
 	tilemap = get_tree().get_first_node_in_group("Level")
 	if not Engine.is_editor_hint():
 		_path.curve = Curve2D.new()
+	if active_behavior_state != null:
+		active_behavior_state.identity = h_frame
 
 func _process(delta: float) -> void:
 	_path_follow.progress += move_speed * delta
@@ -115,6 +119,7 @@ func unit_return_flood() -> Array:
 
 func activate(flooded_tiles: Array) -> void:
 	active_behavior_state.tiles_to_choose = flooded_tiles
+	active_behavior_state.tilemap = tilemap
 	fsm.change_state(active_behavior_state)
 
 func signal_dest_to_board(signal_cell: Vector2i) -> void:

@@ -23,6 +23,7 @@ var walkable_cells: Array = []
 func _ready():
 	_status_label.text = str(_gametracker.player_status)
 	npc_turn_state.end_turn.connect(fsm.change_state.bind(player_turn_state))
+	player_turn_state.deselect_unit.connect(cancel_active_unit)
 	_gametracker.new_status_number.connect(change_status_number)
 	level_instance = level.instantiate()
 	add_child(level_instance)
@@ -32,11 +33,7 @@ func _ready():
 	_initiate()
 	for element in unit_dict:
 		unit_dict[element].destination.connect(draw_non_player_unit_path)
-	
 
-func _check_dict_for_unit(_cell: Vector2i) -> void:
-	pass
-	
 func _initiate() -> void:
 	unit_dict = level_instance.return_preplaced_units()
 	for unit in unit_dict.values():
@@ -92,7 +89,9 @@ func auto_select_unit(cell: Vector2i) -> Array:
 	var flood_fill_array: Array = flood_fill(active_unit.cell, active_unit.move_range)
 	return flood_fill_array
 	
-func _deselect_active_unit(_cell: Vector2i) -> void:
+func _deselect_active_unit() -> void:
+	if !active_unit:
+		return
 	active_unit.is_selected = false
 	_hilight.clear_flood_fill()
 	_unit_path.stop()
@@ -107,7 +106,7 @@ func _move_active_unit(new_cell: Vector2i) -> void:
 		return
 	unit_dict.erase(active_unit.cell)
 	unit_dict[new_cell] = active_unit
-	_deselect_active_unit(new_cell)
+	_deselect_active_unit()
 	active_unit.walk_along(_unit_path.current_path)
 	await active_unit.walk_finished
 	_clear_active_unit()
@@ -181,10 +180,19 @@ func _check_for_wrong_state() -> bool:
 	return true
 	
 func _on_texture_button_pressed():
-	fsm.change_state(npc_turn_state)
+	if fsm.state is PlayerTurnState:
+		fsm.change_state(npc_turn_state)
+		_gametracker.player_status = 10
+		_gametracker.enemy_status = 10
+		change_status_number(_gametracker.player_status)
+	
 
 func draw_non_player_unit_path(dest_cell) -> void:
 	_unit_path.draw(active_unit.cell, dest_cell)
 	await get_tree().create_timer(1).timeout
 	_move_active_unit(dest_cell)
 	npc_turn_state.run_npc_moves()
+
+func cancel_active_unit() -> void:
+	_deselect_active_unit()
+	_clear_active_unit()
