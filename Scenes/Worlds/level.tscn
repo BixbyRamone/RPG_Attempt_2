@@ -1,11 +1,15 @@
-[gd_scene load_steps=10 format=3 uid="uid://8mc4j58mssb7"]
+[gd_scene load_steps=14 format=3 uid="uid://8mc4j58mssb7"]
 
 [ext_resource type="Texture2D" uid="uid://c0uvw0lgo02sj" path="res://Assets/Tiles/small_ground_tiles.png" id="1_ltq5d"]
 [ext_resource type="Texture2D" uid="uid://bssamqu5wpu5x" path="res://Assets/Tiles/small_water_tiles.png" id="2_nq7me"]
 [ext_resource type="Script" path="res://Scenes/Worlds/IsoMap.gd" id="3_4v4qf"]
 [ext_resource type="PackedScene" uid="uid://ctpycwrvwv0kl" path="res://Scenes/Units/unit.tscn" id="4_db3dp"]
-[ext_resource type="Script" path="res://Stats/priest.gd" id="5_eo7b1"]
+[ext_resource type="Resource" uid="uid://bp2oddohvouc6" path="res://Stats/priest.tres" id="6_3a7r4"]
+[ext_resource type="Resource" uid="uid://46ahgv8iipv1" path="res://AttackScripts/priest.tres" id="6_bl0e5"]
+[ext_resource type="Resource" uid="uid://bjxv686tshx0o" path="res://Stats/trees.tres" id="7_td4ag"]
+[ext_resource type="Resource" uid="uid://3anogo8lmw8h" path="res://Stats/rocks.tres" id="8_uwoqr"]
 [ext_resource type="Resource" uid="uid://c2g2msp0gvf4v" path="res://Stats/laborer.tres" id="9_wscxq"]
+[ext_resource type="Resource" uid="uid://d0tr8vpwdl6yb" path="res://Stats/cleric.tres" id="10_qxch2"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_spikk"]
 texture = ExtResource("1_ltq5d")
@@ -68,17 +72,40 @@ wait_time = 0.2
 one_shot = true
 
 [node name="PreplacedUnits" type="Node2D" parent="."]
+y_sort_enabled = true
 
 [node name="Unit" parent="PreplacedUnits" instance=ExtResource("4_db3dp")]
-position = Vector2(62, 15)
-h_frame = 0
+position = Vector2(64, 15)
 move_range = 3
-stats = ExtResource("5_eo7b1")
+stats = ExtResource("6_3a7r4")
+ability = ExtResource("6_bl0e5")
 
 [node name="Unit2" parent="PreplacedUnits" instance=ExtResource("4_db3dp")]
-position = Vector2(241, -9)
-h_frame = 4
+position = Vector2(256, 15)
+h_frame = 1
 move_range = 3
 stats = ExtResource("9_wscxq")
+
+[node name="Unit3" parent="PreplacedUnits" instance=ExtResource("4_db3dp")]
+position = Vector2(240, 56)
+stats = ExtResource("7_td4ag")
+
+[node name="Unit4" parent="PreplacedUnits" node_paths=PackedStringArray("active_behavior_state") instance=ExtResource("4_db3dp")]
+position = Vector2(273, 39)
+stats = ExtResource("7_td4ag")
+active_behavior_state = NodePath("../Unit3/UnitFiniteStateMachine/LaborerNPC")
+
+[node name="Unit5" parent="PreplacedUnits" node_paths=PackedStringArray("active_behavior_state") instance=ExtResource("4_db3dp")]
+position = Vector2(321, 15)
+stats = ExtResource("7_td4ag")
+active_behavior_state = NodePath("../Unit3/UnitFiniteStateMachine/LaborerNPC")
+
+[node name="Unit6" parent="PreplacedUnits" instance=ExtResource("4_db3dp")]
+position = Vector2(240, 24)
+stats = ExtResource("8_uwoqr")
+
+[node name="Unit7" parent="PreplacedUnits" instance=ExtResource("4_db3dp")]
+position = Vector2(128, -17)
+stats = ExtResource("10_qxch2")
 
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

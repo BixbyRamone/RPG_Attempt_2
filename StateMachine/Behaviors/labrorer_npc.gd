@@ -9,6 +9,7 @@ const directions: Array = [Vector2i.UP, Vector2i.RIGHT, Vector2i.DOWN, Vector2i.
 
 var tiles_to_choose: Array = []
 var tilemap: TileMap
+var gameboard: GameBoard
 
 var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 var timer_0:Timer = Timer.new()
@@ -22,6 +23,8 @@ func enter() -> void:
 	await get_tree().create_timer(1).timeout
 	tiles_to_choose = find_dest()
 	var destination: Vector2i = tiles_to_choose[rng.randi_range(0, tiles_to_choose.size()-1)]
+	while destination == unit.cell:
+		destination = tiles_to_choose[rng.randi_range(0, tiles_to_choose.size()-1)]
 	signal_dest_to_unit.emit(destination)
 
 	
@@ -40,7 +43,6 @@ func find_dest() -> Array:
 			preferred_tiles_array.append(item)
 			i += 1
 		
-	
 	return tiles_to_choose + preferred_tiles_array
 
 func check_adjacents(cell: Vector2i) -> int:
@@ -49,4 +51,9 @@ func check_adjacents(cell: Vector2i) -> int:
 		var target_cell_data: Vector2i = tilemap.get_cell_atlas_coords(0, cell + direction)
 		if target_cell_data.x == identity:
 			weighter += 1
+			if identity == 1:
+				if gameboard.unit_dict.has(cell + direction):
+					var unit: Unit = gameboard.unit_dict[cell + direction]
+					if unit.stats is TreeStats:
+						weighter += 2
 	return weighter

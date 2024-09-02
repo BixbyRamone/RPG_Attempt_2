@@ -1,0 +1,6 @@
+[gd_resource type="Resource" script_class="RockStats" load_steps=2 format=3 uid="uid://3anogo8lmw8h"]
+
+[ext_resource type="Script" path="res://Stats/rocks.gd" id="1_27bry"]
+
+[resource]
+script = ExtResource("1_27bry")

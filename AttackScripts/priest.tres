@@ -1,0 +1,6 @@
+[gd_resource type="Resource" script_class="PriestAbility" load_steps=2 format=3 uid="uid://46ahgv8iipv1"]
+
+[ext_resource type="Script" path="res://AttackScripts/priest.gd" id="1_p55q3"]
+
+[resource]
+script = ExtResource("1_p55q3")

@@ -95,18 +95,21 @@ _data = {
 }
 
 [node name="Unit" type="Node2D" node_paths=PackedStringArray("active_behavior_state")]
+y_sort_enabled = true
 script = ExtResource("1_vivxp")
-h_frame = null
 active_behavior_state = NodePath("UnitFiniteStateMachine/LaborerNPC")
 
 [node name="Path2D" type="Path2D" parent="."]
+y_sort_enabled = true
 
 [node name="PathFollow2D" type="PathFollow2D" parent="Path2D"]
+y_sort_enabled = true
 rotates = false
 loop = false
 
 [node name="Sprite2D" type="Sprite2D" parent="Path2D/PathFollow2D"]
 z_index = 1
+y_sort_enabled = true
 position = Vector2(2.08165e-12, -20)
 script = ExtResource("2_r58js")
 
@@ -117,5 +120,8 @@ libraries = {
 
 [node name="UnitFiniteStateMachine" parent="." node_paths=PackedStringArray("state") instance=ExtResource("3_lfo21")]
 state = NodePath("StaticBehavior")
+
+[node name="LaborerNPC" parent="UnitFiniteStateMachine" index="1" node_paths=PackedStringArray("unit")]
+unit = NodePath("../..")
 
 [editable path="UnitFiniteStateMachine"]

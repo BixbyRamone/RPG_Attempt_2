@@ -8,22 +8,26 @@ const DIRECTIONS = [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN]
 var level_instance: Level
 var unit_dict: Dictionary = {}
 var active_unit: Unit
+var saved_active_unit: Unit
 var walkable_cells: Array = []
 
 @onready var fsm: FiniteStateMachine = $FiniteStateMachine
 @onready var player_turn_state: PlayerTurnState = $FiniteStateMachine/PlayerTurnState
 @onready var npc_turn_state: NPCTurnState = $FiniteStateMachine/NPCTurnState
+@onready var player_ability_state: PlayerAbilityState = $FiniteStateMachine/PlayerAbilityState
 
 @onready var _gametracker: GameTracker = $GameTracker
 @onready var _status_label: Label = $Camera2D/Label
 @onready var _hilight: TileHighlight = $Hilgight_TileMap
 @onready var _npc_delay_timer: Timer = $Timer
 @onready var _unit_path: UnitPath = $Hilgight_TileMap/Arrows
+@onready var _ability_button: AbilityButton = $Camera2D/AbilityButton
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	_status_label.text = str(_gametracker.player_status)
 	npc_turn_state.end_turn.connect(fsm.change_state.bind(player_turn_state))
 	player_turn_state.deselect_unit.connect(cancel_active_unit)
+	player_ability_state.exit_ability_state.connect(cancel_ability_view)
 	_gametracker.new_status_number.connect(change_status_number)
 	level_instance = level.instantiate()
 	add_child(level_instance)
@@ -32,7 +36,8 @@ func _ready():
 	_hilight.signal_attach_board.connect(attach_board_to_highlights)
 	_initiate()
 	for element in unit_dict:
-		unit_dict[element].destination.connect(draw_non_player_unit_path)
+		if unit_dict[element].stats.owner != "Player":
+			unit_dict[element].destination.connect(draw_non_player_unit_path)
 
 func _initiate() -> void:
 	unit_dict = level_instance.return_preplaced_units()
@@ -70,6 +75,7 @@ func _select_unit(cell: Vector2i) -> void:
 	if !unit_dict.has(cell):
 		return
 	active_unit = unit_dict[cell]
+	saved_active_unit = active_unit
 	if _check_status_requirements():
 		return
 	if _check_for_wrong_state():
@@ -77,12 +83,18 @@ func _select_unit(cell: Vector2i) -> void:
 	if !active_unit.is_selected:
 		active_unit.is_selected = true
 		#need to check if unit belongs to player
-		var flood_fill_array: Array = flood_fill(active_unit.cell, active_unit.move_range)
+		var move_range = active_unit.move_range
+		if active_unit.has_moved:
+			move_range = 0
+		var flood_fill_array: Array = flood_fill(active_unit.cell, move_range)
 		walkable_cells = flood_fill_array
 		#flood_fill = level_instance.return_move_array_sans_obstructions(flood_fill)
 		_hilight.flood_fill_highlight(flood_fill_array, active_unit.cell)
 		if active_unit.stats.owner != "Player":
 			active_unit.activate(flood_fill_array)
+		if active_unit.stats.owner == "Player":
+			_ability_button.button_active(active_unit.stats, true)
+			
 
 func auto_select_unit(cell: Vector2i) -> Array:
 	_select_unit(cell)
@@ -101,6 +113,8 @@ func _clear_active_unit() -> void:
 	walkable_cells.clear()
 
 func _move_active_unit(new_cell: Vector2i) -> void:
+	active_unit.move_distance = abs(new_cell.x - active_unit.cell.x) +\
+	abs(new_cell.y - active_unit.cell.y)
 	_gametracker.reduce_status(active_unit, fsm.state)
 	if is_occupied(new_cell) or not new_cell in walkable_cells:
 		return
@@ -181,12 +195,16 @@ func _check_for_wrong_state() -> bool:
 	
 func _on_texture_button_pressed():
 	if fsm.state is PlayerTurnState:
+		_ability_button.button_active(active_unit.stats, false)
+		if active_unit:
+			cancel_active_unit()
 		fsm.change_state(npc_turn_state)
 		_gametracker.player_status = 10
 		_gametracker.enemy_status = 10
+		for unit_cell in unit_dict:
+			unit_dict[unit_cell].has_moved = false
 		change_status_number(_gametracker.player_status)
 	
-
 func draw_non_player_unit_path(dest_cell) -> void:
 	_unit_path.draw(active_unit.cell, dest_cell)
 	await get_tree().create_timer(1).timeout
@@ -196,3 +214,13 @@ func draw_non_player_unit_path(dest_cell) -> void:
 func cancel_active_unit() -> void:
 	_deselect_active_unit()
 	_clear_active_unit()
+
+func _on_texture_button_2_pressed() -> void:
+	if fsm.state is PlayerTurnState:
+		fsm.change_state(player_ability_state)
+		var active_tile_highlights: Array = \
+		saved_active_unit.ability.show_affect(saved_active_unit.cell, saved_active_unit.move_distance)
+		_hilight.flood_fill_attack(active_tile_highlights, saved_active_unit.cell)
+
+func cancel_ability_view() -> void:
+	fsm.change_state(player_turn_state)

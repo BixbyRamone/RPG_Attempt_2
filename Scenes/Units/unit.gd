@@ -13,6 +13,7 @@ const DIRECTIONS = [
 @export var move_range: int
 @export var move_speed: float = 100.0
 @export var stats: Resource
+@export var ability: Resource
 @export var active_behavior_state: State
 
 signal walk_finished
@@ -20,8 +21,10 @@ signal select_unit
 signal destination
 
 var tilemap: Level
-var gameboard: GameBoard
+#var gameboard: GameBoard
 var saved_flooded_tiles: Array = []
+var has_moved: bool = false
+var move_distance: int = 0
 
 @onready var fsm: FiniteStateMachine = $UnitFiniteStateMachine
 @onready var static_behavior: State = $UnitFiniteStateMachine/StaticBehavior
@@ -51,7 +54,9 @@ var is_walking: bool = false:
 	set(value):
 		is_walking = value
 		set_process(is_walking)
-
+var gameboard: GameBoard:
+	set(value):
+		active_behavior_state.gameboard = value
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	active_behavior_state.signal_dest_to_unit.connect(signal_dest_to_board)
@@ -66,6 +71,9 @@ func _ready():
 		_path.curve = Curve2D.new()
 	if active_behavior_state != null:
 		active_behavior_state.identity = h_frame
+	if stats.owner == "Resource":
+		var rng: RandomNumberGenerator = RandomNumberGenerator.new()
+		_sprite.frame = rng.randi_range(0, _sprite.hframes - 1)
 
 func _process(delta: float) -> void:
 	_path_follow.progress += move_speed * delta
@@ -75,6 +83,7 @@ func _process(delta: float) -> void:
 		_path_follow.progress_ratio = 0.0
 		position = tilemap.return_pixel_pos_from_grid(cell)
 		_path.curve.clear_points()
+		has_moved = true
 		walk_finished.emit()
 
 func walk_along(path: PackedVector2Array) -> void:

@@ -1,0 +1,6 @@
+[gd_resource type="Resource" script_class="TreeStats" load_steps=2 format=3 uid="uid://bjxv686tshx0o"]
+
+[ext_resource type="Script" path="res://Stats/tree.gd" id="1_umm8h"]
+
+[resource]
+script = ExtResource("1_umm8h")

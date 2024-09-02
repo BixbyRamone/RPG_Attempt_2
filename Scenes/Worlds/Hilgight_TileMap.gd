@@ -50,3 +50,12 @@ func flood_fill_highlight(flood_array: Array, unit_cell: Vector2i) -> void:
 func clear_flood_fill() -> void:
 	_flood_fill.clear()
 
+func flood_fill_attack(flood_array: Array, unit_cell: Vector2i) -> void:
+	#_arrow.stop()
+	_flood_fill.clear()
+	if tile_board != null:
+		signal_attach_board.emit()
+	cell_is_active = true
+	for cell in flood_array:
+		_flood_fill.set_cell(0, cell, 2 ,Vector2i(0,0))
+
