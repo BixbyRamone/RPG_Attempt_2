@@ -10,6 +10,7 @@ var unit_dict: Dictionary = {}
 var active_unit: Unit
 var saved_active_unit: Unit
 var walkable_cells: Array = []
+var active_tile_highlights: Array = []
 
 @onready var fsm: FiniteStateMachine = $FiniteStateMachine
 @onready var player_turn_state: PlayerTurnState = $FiniteStateMachine/PlayerTurnState
@@ -28,6 +29,7 @@ func _ready():
 	npc_turn_state.end_turn.connect(fsm.change_state.bind(player_turn_state))
 	player_turn_state.deselect_unit.connect(cancel_active_unit)
 	player_ability_state.exit_ability_state.connect(cancel_ability_view)
+	player_ability_state.run_ability.connect(run_active_unit_ability)
 	_gametracker.new_status_number.connect(change_status_number)
 	level_instance = level.instantiate()
 	add_child(level_instance)
@@ -66,7 +68,13 @@ func set_highlight_clickable(cell: Vector2i) -> void:
 	if active_unit and active_unit.is_selected:
 		if fsm.state is PlayerTurnState:
 			_unit_path.draw(active_unit.cell, cell)
-		
+	if fsm.state is PlayerAbilityState:
+		if active_tile_highlights.has(cell):
+			_display_attack_effect(saved_active_unit.ability, active_tile_highlights)
+		else:
+			for tile in active_tile_highlights:
+				if unit_dict.has(tile):
+					unit_dict[tile].show_attack_status(1)
 
 func attach_board_to_highlights() -> void:
 	_hilight.tile_board = level_instance
@@ -195,7 +203,8 @@ func _check_for_wrong_state() -> bool:
 	
 func _on_texture_button_pressed():
 	if fsm.state is PlayerTurnState:
-		_ability_button.button_active(active_unit.stats, false)
+		if saved_active_unit:
+			_ability_button.button_active(saved_active_unit.stats, false)
 		if active_unit:
 			cancel_active_unit()
 		fsm.change_state(npc_turn_state)
@@ -218,9 +227,25 @@ func cancel_active_unit() -> void:
 func _on_texture_button_2_pressed() -> void:
 	if fsm.state is PlayerTurnState:
 		fsm.change_state(player_ability_state)
-		var active_tile_highlights: Array = \
+		active_tile_highlights = \
 		saved_active_unit.ability.show_affect(saved_active_unit.cell, saved_active_unit.move_distance)
 		_hilight.flood_fill_attack(active_tile_highlights, saved_active_unit.cell)
+		#_display_attack_effect(saved_active_unit.ability, active_tile_highlights)
 
 func cancel_ability_view() -> void:
 	fsm.change_state(player_turn_state)
+
+func run_active_unit_ability() -> void:
+	var targeted_cells: Array = _hilight.get_used_cells(0)
+	for cell: Vector2i in targeted_cells:
+		if unit_dict.has(cell):
+			pass
+	active_tile_highlights = []
+
+func _display_attack_effect(ability: Resource, tiles: Array) -> void:
+	for tile in tiles:
+		if unit_dict.has(tile):
+			if unit_dict[tile] != saved_active_unit:
+				var this_unit: Unit = unit_dict[tile]
+				var status_int: int = ability.status_int
+				this_unit.show_attack_status(status_int)

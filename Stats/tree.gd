@@ -1,4 +1,4 @@
-extends Resource
+extends Stats
 class_name TreeStats
 
 const name: String = "Tree"
@@ -7,3 +7,4 @@ const skin: Texture2D = preload("res://Assets/BoardItems/trees.png")
 const skin_hframes: int = 3
 const owner: String = "Resource"
 const status_reduction: int = 0
+const status: String = status_array[1]

@@ -12,7 +12,7 @@ const DIRECTIONS = [
 @export var h_frame: int
 @export var move_range: int
 @export var move_speed: float = 100.0
-@export var stats: Resource
+@export var stats: Stats
 @export var ability: Resource
 @export var active_behavior_state: State
 
@@ -34,6 +34,7 @@ var move_distance: int = 0
 @onready var _path: Path2D = $Path2D
 @onready var _path_follow: PathFollow2D = $Path2D/PathFollow2D
 @onready var _sprite: Sprite2D = $Path2D/PathFollow2D/Sprite2D
+@onready var _status_icon: Sprite2D = $Path2D/PathFollow2D/Sprite2D/StatusIcon
 
 var cell := Vector2i.ZERO :
 	set(value):
@@ -59,13 +60,13 @@ var gameboard: GameBoard:
 		active_behavior_state.gameboard = value
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	set_process(false)
 	active_behavior_state.signal_dest_to_unit.connect(signal_dest_to_board)
 	_anim_player.play("Idle")
 	move_range = stats.move
 	_sprite.texture = stats.skin
 	_sprite.skin_hframes = stats.skin_hframes
 	_sprite.frame = h_frame
-	set_process(false)
 	tilemap = get_tree().get_first_node_in_group("Level")
 	if not Engine.is_editor_hint():
 		_path.curve = Curve2D.new()
@@ -76,7 +77,7 @@ func _ready():
 		_sprite.frame = rng.randi_range(0, _sprite.hframes - 1)
 
 func _process(delta: float) -> void:
-	_path_follow.progress += move_speed * delta
+	_path_follow.progress_ratio += move_speed * delta
 	
 	if _path_follow.progress_ratio >= 1.0:
 		self.is_walking = false
@@ -133,3 +134,9 @@ func activate(flooded_tiles: Array) -> void:
 
 func signal_dest_to_board(signal_cell: Vector2i) -> void:
 	destination.emit(signal_cell)
+
+func set_status_icon() -> void:
+	_status_icon.frame = stats.status_array.find(stats.status)
+
+func show_attack_status(status_int: int) -> void:
+	_status_icon.frame = status_int

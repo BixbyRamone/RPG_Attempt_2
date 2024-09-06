@@ -2,6 +2,7 @@ extends Resource
 class_name PriestAbility
 
 const directions: Array = [Vector2i.UP, Vector2i.RIGHT, Vector2i.DOWN, Vector2i.LEFT]
+const status_int: int = 2
 
 func show_affect(cell: Vector2i, moved_tiles: int) -> Array:
 	var return_array: Array = []
