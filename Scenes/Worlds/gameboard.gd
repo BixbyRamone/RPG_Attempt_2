@@ -71,10 +71,8 @@ func set_highlight_clickable(cell: Vector2i) -> void:
 	if fsm.state is PlayerAbilityState:
 		if active_tile_highlights.has(cell):
 			_display_attack_effect(saved_active_unit.ability, active_tile_highlights)
-		else:
-			for tile in active_tile_highlights:
-				if unit_dict.has(tile):
-					unit_dict[tile].show_attack_status(1)
+			if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
+				run_active_unit_ability()
 
 func attach_board_to_highlights() -> void:
 	_hilight.tile_board = level_instance
@@ -236,11 +234,15 @@ func cancel_ability_view() -> void:
 	fsm.change_state(player_turn_state)
 
 func run_active_unit_ability() -> void:
-	var targeted_cells: Array = _hilight.get_used_cells(0)
-	for cell: Vector2i in targeted_cells:
+	fsm.change_state(player_turn_state)
+	_hilight.clear_flood_fill()
+	for cell: Vector2i in active_tile_highlights:
 		if unit_dict.has(cell):
-			pass
+			if unit_dict[cell] != saved_active_unit:
+				unit_dict[cell].set_status(saved_active_unit.ability.status_int)
 	active_tile_highlights = []
+	saved_active_unit = null
+	
 
 func _display_attack_effect(ability: Resource, tiles: Array) -> void:
 	for tile in tiles:

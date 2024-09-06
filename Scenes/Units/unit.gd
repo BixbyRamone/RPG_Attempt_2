@@ -135,8 +135,15 @@ func activate(flooded_tiles: Array) -> void:
 func signal_dest_to_board(signal_cell: Vector2i) -> void:
 	destination.emit(signal_cell)
 
-func set_status_icon() -> void:
+func _set_status_icon() -> void:
+	_status_icon.position = Vector2(10, -4)
 	_status_icon.frame = stats.status_array.find(stats.status)
 
 func show_attack_status(status_int: int) -> void:
 	_status_icon.frame = status_int
+	_anim_player.play("Status")
+
+func set_status(num: int) -> void:
+	_anim_player.stop()
+	stats.status =  stats.status_array[num]
+	_set_status_icon()
