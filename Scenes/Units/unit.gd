@@ -11,10 +11,11 @@ const DIRECTIONS = [
 #@export var grid: Resource = preload("res://Resources/Grid.tres")
 @export var h_frame: int
 @export var move_range: int
-@export var move_speed: float = 100.0
+@export var move_speed: float = 5.0
 @export var stats: Stats
 @export var ability: Resource
 @export var active_behavior_state: State
+@export var marked_tiles: PackedScene
 
 signal walk_finished
 signal select_unit
@@ -25,6 +26,9 @@ var tilemap: Level
 var saved_flooded_tiles: Array = []
 var has_moved: bool = false
 var move_distance: int = 0
+var status_applied_state: State
+var marked_tile_dict: Dictionary = {}
+
 
 @onready var fsm: FiniteStateMachine = $UnitFiniteStateMachine
 @onready var static_behavior: State = $UnitFiniteStateMachine/StaticBehavior
@@ -136,14 +140,33 @@ func signal_dest_to_board(signal_cell: Vector2i) -> void:
 	destination.emit(signal_cell)
 
 func _set_status_icon() -> void:
+	if stats.owner == "Resource":
+		return
 	_status_icon.position = Vector2(10, -4)
 	_status_icon.frame = stats.status_array.find(stats.status)
 
 func show_attack_status(status_int: int) -> void:
+	if stats.owner == "Resource":
+		return
 	_status_icon.frame = status_int
 	_anim_player.play("Status")
 
-func set_status(num: int) -> void:
+func set_status(num: int, state: State) -> void:
+	status_applied_state = state
+	if stats.owner == "Resource":
+		return
 	_anim_player.stop()
 	stats.status =  stats.status_array[num]
 	_set_status_icon()
+
+func mark_tiles(cells: Array, status: String) -> void:
+	var mt_instance = marked_tiles.instantiate()
+	var map: Node2D = get_tree().get_first_node_in_group("MarkerMap")
+	map.add_child(mt_instance)
+	mt_instance.mark_tiles(cells, status, self.name)
+
+func clear_marked_tiles() -> void:
+	for map in get_tree().get_first_node_in_group("MarkerMap").get_children():
+		if name == map.owner_node_name:
+			map.clear()
+			map.queue_free()
