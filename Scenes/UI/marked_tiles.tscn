@@ -1,0 +1,27 @@
+[gd_scene load_steps=5 format=3 uid="uid://djp32bq8rrwkk"]
+
+[ext_resource type="Texture2D" uid="uid://frioyhc1ci5n" path="res://Assets/UI/marked_cells.png" id="1_n7wtu"]
+[ext_resource type="Script" path="res://Marked_Tiles.gd" id="4_iiqhx"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ckfb5"]
+texture = ExtResource("1_n7wtu")
+texture_region_size = Vector2i(32, 16)
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_qdaec"]
+tile_shape = 1
+tile_layout = 4
+tile_size = Vector2i(32, 16)
+sources/0 = SubResource("TileSetAtlasSource_ckfb5")
+
+[node name="Marked_Tiles" type="TileMap"]
+y_sort_enabled = true
+tile_set = SubResource("TileSet_qdaec")
+format = 2
+layer_0/y_sort_enabled = true
+script = ExtResource("4_iiqhx")

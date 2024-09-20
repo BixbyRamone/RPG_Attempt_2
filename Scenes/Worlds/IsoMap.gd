@@ -15,11 +15,14 @@ signal tile_selected
 signal initiate
 # Called when the node enters the scene tree for the first time.
 func _process(_delta):
-	if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
-		if accepting_clicks:
-			_select_tile()
+	pass
+	#if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
+		#if accepting_clicks:
+			#select_tile()
 
-func _select_tile() -> void:
+func select_tile() -> void:
+	if !accepting_clicks:
+		return
 	accepting_clicks = false
 	var tile_pos: Vector2i = local_to_map(get_local_mouse_position())
 	if check_tile_status(tile_pos):

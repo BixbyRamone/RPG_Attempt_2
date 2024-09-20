@@ -1,6 +1,7 @@
-[gd_scene load_steps=10 format=3 uid="uid://ctpycwrvwv0kl"]
+[gd_scene load_steps=11 format=3 uid="uid://ctpycwrvwv0kl"]
 
 [ext_resource type="Script" path="res://Scenes/Units/unit.gd" id="1_vivxp"]
+[ext_resource type="PackedScene" uid="uid://djp32bq8rrwkk" path="res://Scenes/UI/marked_tiles.tscn" id="2_1mw25"]
 [ext_resource type="Script" path="res://Scenes/Units/sprite_setter.gd" id="2_r58js"]
 [ext_resource type="Texture2D" uid="uid://cqc65jrssieel" path="res://Assets/UI/status_effect_icons.png" id="3_cvuk8"]
 [ext_resource type="PackedScene" uid="uid://4hvscr7tbpd8" path="res://StateMachine/MachineScenes/unit_finite_state_machine.tscn" id="3_lfo21"]
@@ -130,6 +131,7 @@ y_sort_enabled = true
 script = ExtResource("1_vivxp")
 move_speed = 10.0
 active_behavior_state = NodePath("UnitFiniteStateMachine/LaborerNPC")
+marked_tiles = ExtResource("2_1mw25")
 
 [node name="Path2D" type="Path2D" parent="."]
 y_sort_enabled = true

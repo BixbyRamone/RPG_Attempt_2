@@ -22,6 +22,8 @@ level = ExtResource("2_nawbd")
 [node name="GameTracker" type="Node2D" parent="."]
 script = ExtResource("3_2pcju")
 
+[node name="MarkerMap" type="Node2D" parent="." groups=["MarkerMap"]]
+
 [node name="Hilgight_TileMap" parent="." instance=ExtResource("3_vj1px")]
 
 [node name="Player" parent="." groups=["Player"] instance=ExtResource("4_wfopi")]
