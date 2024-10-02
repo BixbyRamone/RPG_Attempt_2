@@ -163,7 +163,7 @@ func mark_tiles(cells: Array, status: String) -> void:
 	var mt_instance = marked_tiles.instantiate()
 	var map: Node2D = get_tree().get_first_node_in_group("MarkerMap")
 	map.add_child(mt_instance)
-	mt_instance.mark_tiles(cells, status, self.name)
+	mt_instance.mark_tiles(cells, status, self.name, stats.effect_color)
 
 func clear_marked_tiles() -> void:
 	for map in get_tree().get_first_node_in_group("MarkerMap").get_children():

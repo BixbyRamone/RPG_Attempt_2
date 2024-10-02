@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://djp32bq8rrwkk"]
+[gd_scene load_steps=7 format=3 uid="uid://djp32bq8rrwkk"]
 
 [ext_resource type="Texture2D" uid="uid://frioyhc1ci5n" path="res://Assets/UI/marked_cells.png" id="1_n7wtu"]
+[ext_resource type="Texture2D" uid="uid://c0u86ofdrv4c4" path="res://Assets/UI/marked_cells_full.png" id="2_qlp5w"]
 [ext_resource type="Script" path="res://Marked_Tiles.gd" id="4_iiqhx"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ckfb5"]
@@ -13,11 +14,46 @@ texture_region_size = Vector2i(32, 16)
 1:1/0 = 0
 2:1/0 = 0
 
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jegev"]
+texture = ExtResource("2_qlp5w")
+texture_region_size = Vector2i(32, 16)
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+0:2/0 = 0
+1:2/0 = 0
+2:2/0 = 0
+0:3/0 = 0
+1:3/0 = 0
+2:3/0 = 0
+0:4/0 = 0
+1:4/0 = 0
+2:4/0 = 0
+0:5/0 = 0
+1:5/0 = 0
+2:5/0 = 0
+0:6/0 = 0
+1:6/0 = 0
+2:6/0 = 0
+0:7/0 = 0
+1:7/0 = 0
+2:7/0 = 0
+0:8/0 = 0
+1:8/0 = 0
+2:8/0 = 0
+0:9/0 = 0
+1:9/0 = 0
+2:9/0 = 0
+
 [sub_resource type="TileSet" id="TileSet_qdaec"]
 tile_shape = 1
 tile_layout = 4
 tile_size = Vector2i(32, 16)
 sources/0 = SubResource("TileSetAtlasSource_ckfb5")
+sources/1 = SubResource("TileSetAtlasSource_jegev")
 
 [node name="Marked_Tiles" type="TileMap"]
 y_sort_enabled = true

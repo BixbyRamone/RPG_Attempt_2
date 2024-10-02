@@ -11,11 +11,12 @@ func _ready() -> void:
 func change_state(new_state: State) -> void:
 	if state is State:
 		state.exit()
-	if new_state is PlayerTurnState:
-		if state != PlayerAbilityState:
-			state_change.emit(new_state)
-	if new_state is EnemyTurnState or new_state is NPCTurnState:
-		state_change.emit(new_state)
+	state_change.emit(state, new_state)
+	#if new_state is PlayerTurnState:
+		#if state != PlayerAbilityState:
+			#state_change.emit(new_state)
+	#if new_state is EnemyTurnState or new_state is NPCTurnState:
+		#state_change.emit(new_state)
 	new_state.enter()
 	state = new_state
 

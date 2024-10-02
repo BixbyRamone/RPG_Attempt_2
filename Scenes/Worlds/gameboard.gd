@@ -103,6 +103,8 @@ func _select_unit(cell: Vector2i) -> void:
 	saved_active_unit = active_unit
 	if _check_status_requirements():
 		return
+	if _check_for_wrong_state():
+		return
 	if !active_unit.is_selected:
 		active_unit.is_selected = true
 		#need to check if unit belongs to player
@@ -288,18 +290,21 @@ func _get_units_by_owner(owner: String) -> Array:
 			unit_array.append(unit)
 	return unit_array
 
-func check_state_for_status_change(coming_state: State) -> void:
-	_status_label.text = coming_state.name
+func check_state_for_status_change(previous_state: State, incoming_state: State) -> void:
+	_status_label.text = incoming_state.name
 	for unit: Unit in unit_dict.values():
 		if unit.stats.owner == "Resource":
 			continue
-		if coming_state is PlayerTurnState:
+		if incoming_state is PlayerTurnState and previous_state is PlayerAbilityState:
+			_deselect_active_unit()
+			_clear_active_unit()
+		if incoming_state is PlayerTurnState and not previous_state is PlayerAbilityState:
 			_deselect_active_unit()
 			_clear_active_unit()
 			if unit.stats.owner == "Player":
 				unit.stats.status = unit.stats.status_array[1]
 				unit._set_status_icon()
-				#unit.clear_marked_tiles()
+				unit.clear_marked_tiles()
 
 func pc_turn_ended() -> void:
 	npc_is_done = true
