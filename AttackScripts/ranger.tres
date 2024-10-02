@@ -1,0 +1,6 @@
+[gd_resource type="Resource" script_class="RangerAbility" load_steps=2 format=3 uid="uid://b60spgirfrww4"]
+
+[ext_resource type="Script" path="res://AttackScripts/ranger.gd" id="1_dfrau"]
+
+[resource]
+script = ExtResource("1_dfrau")

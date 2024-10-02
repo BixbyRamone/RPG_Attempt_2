@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://8mc4j58mssb7"]
+[gd_scene load_steps=17 format=3 uid="uid://8mc4j58mssb7"]
 
 [ext_resource type="Texture2D" uid="uid://c0uvw0lgo02sj" path="res://Assets/Tiles/small_ground_tiles.png" id="1_ltq5d"]
 [ext_resource type="Texture2D" uid="uid://bssamqu5wpu5x" path="res://Assets/Tiles/small_water_tiles.png" id="2_nq7me"]
@@ -11,6 +11,8 @@
 [ext_resource type="Resource" uid="uid://3anogo8lmw8h" path="res://Stats/rocks.tres" id="8_uwoqr"]
 [ext_resource type="Resource" uid="uid://c2g2msp0gvf4v" path="res://Stats/laborer.tres" id="9_wscxq"]
 [ext_resource type="Resource" uid="uid://d0tr8vpwdl6yb" path="res://Stats/cleric.tres" id="10_qxch2"]
+[ext_resource type="Resource" uid="uid://d5xu2a7tyclf" path="res://Stats/ranger.tres" id="12_dl5u1"]
+[ext_resource type="Resource" uid="uid://b60spgirfrww4" path="res://AttackScripts/ranger.tres" id="13_cjxh4"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_spikk"]
 texture = ExtResource("1_ltq5d")
@@ -116,5 +118,10 @@ position = Vector2(128, -17)
 move_speed = 5.0
 stats = ExtResource("10_qxch2")
 ability = ExtResource("8_m68dy")
+
+[node name="Unit8" parent="PreplacedUnits" instance=ExtResource("4_db3dp")]
+position = Vector2(289, 79)
+stats = ExtResource("12_dl5u1")
+ability = ExtResource("13_cjxh4")
 
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
