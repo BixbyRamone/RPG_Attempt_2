@@ -4,6 +4,7 @@ class_name PriestAbility
 const directions: Array = [Vector2i.UP, Vector2i.RIGHT, Vector2i.DOWN, Vector2i.LEFT]
 const status_int: int = 2
 const priest_move_cap: int = 3
+const instantaneous: bool = false
 
 func show_affect(unit: Unit, moved_tiles: int, unit_dict: Dictionary) -> Array:
 	moved_tiles = clamp(moved_tiles, 0, priest_move_cap)

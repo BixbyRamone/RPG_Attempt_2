@@ -4,6 +4,7 @@ class_name ClericAbility
 const directions: Array = [Vector2i.UP, Vector2i.RIGHT, Vector2i.DOWN, Vector2i.LEFT]
 const status_int: int = 3
 const cleric_move_limit: int = 3
+const instantaneous: bool = false
 
 func show_affect(unit: Unit, moved_tiles: int, unit_dict: Dictionary) -> Array:
 	var return_array: Array = []

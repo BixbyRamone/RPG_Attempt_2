@@ -72,8 +72,6 @@ func tile_clicked(cell: Vector2i, _new_state: State = null) -> void:
 		if active_unit.is_selected:
 			_move_active_unit(cell)
 
-	
-		
 func reinitialize() -> void:
 	unit_dict.clear()
 	for child in level_instance.return_preplaced_units():
@@ -89,9 +87,16 @@ func set_highlight_clickable(cell: Vector2i) -> void:
 			_unit_path.draw(active_unit.cell, cell)
 	if fsm.state is PlayerAbilityState:
 		if active_tile_highlights.has(cell):
-			_display_attack_effect(saved_active_unit.ability, active_tile_highlights)
+			var affected_tiles: Array
+			if saved_active_unit.ability.has_method("return_affected_cell"):
+				affected_tiles = saved_active_unit.ability.return_affected_cell(cell, active_tile_highlights)
+			else:
+				affected_tiles = active_tile_highlights
+			_display_attack_effect(saved_active_unit.ability, affected_tiles)
 			#if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
 				#run_active_unit_ability()
+		else:
+			_hide_attack_effect(active_tile_highlights)
 #
 func attach_board_to_highlights() -> void:
 	_hilight.tile_board = level_instance
@@ -269,7 +274,8 @@ func run_active_unit_ability() -> void:
 		if unit_dict.has(cell):
 			if unit_dict[cell] != saved_active_unit:
 				unit_dict[cell].set_status(saved_active_unit.ability.status_int, fsm.state)
-	saved_active_unit.mark_tiles(active_tile_highlights, saved_active_unit.stats.status)
+	if !saved_active_unit.ability.instantaneous:
+		saved_active_unit.mark_tiles(active_tile_highlights, saved_active_unit.stats.status)
 	saved_active_unit.has_moved = true
 	active_tile_highlights = []
 	saved_active_unit = null
@@ -282,7 +288,12 @@ func _display_attack_effect(ability: Resource, tiles: Array) -> void:
 				var this_unit: Unit = unit_dict[tile]
 				var status_int: int = ability.status_int
 				this_unit.show_attack_status(status_int)
-				
+
+func _hide_attack_effect(tiles: Array) -> void:
+	for tile in tiles:
+		if unit_dict.has(tile):
+			unit_dict[tile].show_attack_status(1)
+			
 func _get_units_by_owner(owner: String) -> Array:
 	var unit_array: Array = []
 	for unit in unit_dict.values():
