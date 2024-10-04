@@ -71,6 +71,7 @@ func tile_clicked(cell: Vector2i, _new_state: State = null) -> void:
 	elif active_unit:
 		if active_unit.is_selected:
 			_move_active_unit(cell)
+			
 
 func reinitialize() -> void:
 	unit_dict.clear()
@@ -270,7 +271,13 @@ func cancel_ability_view() -> void:
 
 func run_active_unit_ability() -> void:
 	_hilight.clear_flood_fill()
-	for cell: Vector2i in active_tile_highlights:
+	var affected_tiles: Array
+	if saved_active_unit.ability.has_method("return_affected_cell"):
+		var cell: Vector2i = _hilight.local_to_map(get_local_mouse_position())
+		affected_tiles = saved_active_unit.ability.return_affected_cell(cell, active_tile_highlights)
+	else:
+		affected_tiles = active_tile_highlights
+	for cell: Vector2i in affected_tiles:
 		if unit_dict.has(cell):
 			if unit_dict[cell] != saved_active_unit:
 				unit_dict[cell].set_status(saved_active_unit.ability.status_int, fsm.state)

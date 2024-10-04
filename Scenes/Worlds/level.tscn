@@ -121,6 +121,7 @@ ability = ExtResource("8_m68dy")
 
 [node name="Unit8" parent="PreplacedUnits" instance=ExtResource("4_db3dp")]
 position = Vector2(289, 79)
+move_speed = 5.0
 stats = ExtResource("12_dl5u1")
 ability = ExtResource("13_cjxh4")
 
