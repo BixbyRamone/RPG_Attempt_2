@@ -11,14 +11,16 @@ func show_affect(unit: Unit, moved_tiles: int, unit_dict: Dictionary) -> Array:
 	var y_val = unit.cell.y
 	for dir in directions:
 		var obstuction: bool = false
-		var i: int = 2
+		var i: int = 1
 		while i < 6:
 			if obstuction:
 				i += 1
 				continue
 			var append_cell: Vector2i = unit.cell + dir * i
-			return_array.append(append_cell)
+			if i != 1:
+				return_array.append(append_cell)
 			i += 1
+			
 			if unit_dict.has(append_cell):
 				obstuction = true
 	return return_array
