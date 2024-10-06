@@ -59,3 +59,6 @@ func flood_fill_attack(flood_array: Array, unit_cell: Vector2i) -> void:
 	for cell in flood_array:
 		_flood_fill.set_cell(0, cell, 2 ,Vector2i(0,0))
 
+func accent_attack_tiles(cells: Array) -> void:
+	for cell in cells:
+		_flood_fill.set_cell(0, cell, 2, Vector2i(0,1))

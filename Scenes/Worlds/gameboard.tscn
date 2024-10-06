@@ -45,6 +45,7 @@ offset_top = -120.0
 offset_right = -140.0
 offset_bottom = -97.0
 pivot_offset = Vector2(-80, -40)
+mouse_filter = 0
 
 [node name="TextureButton" type="TextureButton" parent="Camera2D"]
 offset_left = -180.0

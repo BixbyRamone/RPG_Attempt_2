@@ -72,6 +72,8 @@ texture = ExtResource("3_vi4h8")
 texture_region_size = Vector2i(32, 16)
 0:0/0 = 0
 1:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
 
 [sub_resource type="TileSet" id="TileSet_dtoid"]
 tile_shape = 1

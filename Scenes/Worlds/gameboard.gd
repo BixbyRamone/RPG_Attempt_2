@@ -93,10 +93,12 @@ func set_highlight_clickable(cell: Vector2i) -> void:
 				affected_tiles = saved_active_unit.ability.return_affected_cell(cell, active_tile_highlights)
 			else:
 				affected_tiles = active_tile_highlights
+			_hilight.accent_attack_tiles(affected_tiles)
 			_display_attack_effect(saved_active_unit.ability, affected_tiles)
 			#if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
 				#run_active_unit_ability()
 		else:
+			_hilight.flood_fill_attack(active_tile_highlights, saved_active_unit.cell)
 			_hide_attack_effect(active_tile_highlights)
 #
 func attach_board_to_highlights() -> void:
@@ -143,11 +145,11 @@ func _clear_active_unit() -> void:
 	walkable_cells.clear()
 #
 func _move_active_unit(new_cell: Vector2i) -> void:
-	active_unit.move_distance = abs(new_cell.x - active_unit.cell.x) +\
-	abs(new_cell.y - active_unit.cell.y)
 	_gametracker.reduce_status(active_unit, fsm.state)
 	if is_occupied(new_cell) or not new_cell in walkable_cells:
 		return
+	active_unit.move_distance = abs(new_cell.x - active_unit.cell.x) +\
+	abs(new_cell.y - active_unit.cell.y)
 	unit_dict.erase(active_unit.cell)
 	unit_dict[new_cell] = active_unit
 	_deselect_active_unit()
@@ -239,6 +241,7 @@ func _on_texture_button_pressed():
 		_gametracker.enemy_status = 10
 		for unit_cell in unit_dict:
 			unit_dict[unit_cell].has_moved = false
+			unit_dict[unit_cell].move_distance = 0
 		#change_status_number(_gametracker.player_status)
 	
 func draw_non_player_unit_path(dest_cell) -> void:
@@ -282,7 +285,8 @@ func run_active_unit_ability() -> void:
 			if unit_dict[cell] != saved_active_unit:
 				unit_dict[cell].set_status(saved_active_unit.ability.status_int, fsm.state)
 	if !saved_active_unit.ability.instantaneous:
-		saved_active_unit.mark_tiles(active_tile_highlights, saved_active_unit.stats.status)
+		pass
+	saved_active_unit.mark_tiles(affected_tiles, saved_active_unit.stats.status)
 	saved_active_unit.has_moved = true
 	active_tile_highlights = []
 	saved_active_unit = null
