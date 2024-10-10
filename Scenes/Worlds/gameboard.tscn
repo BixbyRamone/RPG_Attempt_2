@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://c0wowhietjf58"]
+[gd_scene load_steps=16 format=3 uid="uid://c0wowhietjf58"]
 
 [ext_resource type="Script" path="res://Scenes/Worlds/gameboard.gd" id="1_o5a7u"]
 [ext_resource type="PackedScene" uid="uid://8mc4j58mssb7" path="res://Scenes/Worlds/level.tscn" id="2_nawbd"]
@@ -13,6 +13,7 @@
 [ext_resource type="Script" path="res://StateMachine/Enemy_Turn_State.gd" id="8_ameps"]
 [ext_resource type="Script" path="res://StateMachine/NPC_Turn_State.gd" id="9_sfls2"]
 [ext_resource type="Script" path="res://Scenes/Worlds/ability_button.gd" id="11_3ticg"]
+[ext_resource type="Script" path="res://StateMachine/Check_State.gd" id="15_c3tmc"]
 [ext_resource type="Script" path="res://StateMachine/Player_Ability_State.gd" id="15_soqfg"]
 
 [node name="Gameboard" type="Node2D"]
@@ -86,6 +87,12 @@ script = ExtResource("15_soqfg")
 [node name="NPCTurnState" type="Node" parent="FiniteStateMachine" node_paths=PackedStringArray("gameboard")]
 script = ExtResource("9_sfls2")
 gameboard = NodePath("../..")
+
+[node name="CheckState" type="Node" parent="FiniteStateMachine" node_paths=PackedStringArray("gameboard", "camera_player", "player_turn_state")]
+script = ExtResource("15_c3tmc")
+gameboard = NodePath("../..")
+camera_player = NodePath("../../Player")
+player_turn_state = NodePath("../PlayerTurnState")
 
 [connection signal="pressed" from="Camera2D/TextureButton" to="." method="_on_texture_button_pressed"]
 [connection signal="pressed" from="Camera2D/AbilityButton" to="." method="_on_texture_button_2_pressed"]

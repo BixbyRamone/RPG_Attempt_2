@@ -17,6 +17,7 @@ var npc_is_done: bool = false
 @onready var player_turn_state: PlayerTurnState = $FiniteStateMachine/PlayerTurnState
 @onready var npc_turn_state: NPCTurnState = $FiniteStateMachine/NPCTurnState
 @onready var player_ability_state: PlayerAbilityState = $FiniteStateMachine/PlayerAbilityState
+@onready var status_check_state: CheckState = $FiniteStateMachine/CheckState
 
 @onready var _gametracker: GameTracker = $GameTracker
 @onready var _status_label: Label = $Camera2D/Label
@@ -34,6 +35,7 @@ func _ready():
 	player_turn_state.deselect_unit.connect(cancel_active_unit)
 	player_ability_state.exit_ability_state.connect(cancel_ability_view)
 	player_ability_state.run_ability.connect(run_active_unit_ability)
+	status_check_state.complete_check_state.connect(start_next_round)
 	#_gametracker.new_status_number.connect(change_status_number)
 	level_instance = level.instantiate()
 	add_child(level_instance)
@@ -157,7 +159,7 @@ func _move_active_unit(new_cell: Vector2i) -> void:
 	await active_unit.walk_finished
 	await get_tree().create_timer(0.7)
 	if npc_is_done:
-		fsm.change_state(player_turn_state)
+		fsm.change_state(status_check_state)
 		npc_is_done = false
 	_clear_active_unit()
 	#
@@ -330,3 +332,6 @@ func check_state_for_status_change(previous_state: State, incoming_state: State)
 
 func pc_turn_ended() -> void:
 	npc_is_done = true
+
+func start_next_round() -> void:
+	fsm.change_state(player_turn_state)
