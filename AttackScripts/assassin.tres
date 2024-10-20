@@ -1,0 +1,6 @@
+[gd_resource type="Resource" script_class="AssassinAbility" load_steps=2 format=3 uid="uid://5t2icfveb30g"]
+
+[ext_resource type="Script" path="res://AttackScripts/assasin.gd" id="1_x776k"]
+
+[resource]
+script = ExtResource("1_x776k")

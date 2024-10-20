@@ -285,7 +285,7 @@ func run_active_unit_ability() -> void:
 	for cell: Vector2i in affected_tiles:
 		if unit_dict.has(cell):
 			if unit_dict[cell] != saved_active_unit:
-				unit_dict[cell].set_status(saved_active_unit.ability.status_int, fsm.state)
+				unit_dict[cell].set_status(saved_active_unit.ability.status_int, fsm.state, saved_active_unit)
 	if !saved_active_unit.ability.instantaneous:
 		pass
 	saved_active_unit.mark_tiles(affected_tiles, saved_active_unit.stats.status)

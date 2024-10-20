@@ -1,0 +1,6 @@
+[gd_resource type="Resource" script_class="BountyHunterAbility" load_steps=2 format=3 uid="uid://bjj666wqg3ivo"]
+
+[ext_resource type="Script" path="res://AttackScripts/bountyhunter.gd" id="1_n25wb"]
+
+[resource]
+script = ExtResource("1_n25wb")

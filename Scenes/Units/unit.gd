@@ -29,7 +29,6 @@ var move_distance: int = 0
 var status_applied_state: State
 var marked_tile_dict: Dictionary = {}
 
-
 @onready var fsm: FiniteStateMachine = $UnitFiniteStateMachine
 @onready var static_behavior: State = $UnitFiniteStateMachine/StaticBehavior
 
@@ -62,6 +61,14 @@ var is_walking: bool = false:
 var gameboard: GameBoard:
 	set(value):
 		active_behavior_state.gameboard = value
+
+var carried_unit: Unit:
+	set(value):
+		if value != null:
+			stats.status =  stats.status_array[6]
+			_status_icon.texture = value._sprite.texture
+			_status_icon.hframes = value._sprite.hframes
+			_status_icon.frame = value._sprite.frame
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	set_process(false)
@@ -143,6 +150,8 @@ func _set_status_icon() -> void:
 	if stats.owner == "Resource":
 		return
 	_status_icon.position = Vector2(10, -4)
+	if carried_unit != null:
+		self.queue_free()
 	_status_icon.frame = stats.status_array.find(stats.status)
 
 func show_attack_status(status_int: int) -> void:
@@ -151,10 +160,15 @@ func show_attack_status(status_int: int) -> void:
 	_status_icon.frame = status_int
 	_anim_player.play("Status")
 
-func set_status(num: int, state: State) -> void:
+func set_status(num: int, state: State, carrier_unit: Unit) -> void:
 	status_applied_state = state
 	if stats.owner == "Resource":
 		return
+	if num == 4:
+		carrier_unit.carried_unit = self
+	if num != 4:
+		carried_unit = null
+		_status_icon.hframes = 3
 	_anim_player.stop()
 	stats.status =  stats.status_array[num]
 	_set_status_icon()

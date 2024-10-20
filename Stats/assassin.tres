@@ -1,0 +1,6 @@
+[gd_resource type="Resource" script_class="AssassinStats" load_steps=2 format=3 uid="uid://b6k7uswnkv8nu"]
+
+[ext_resource type="Script" path="res://Stats/assassin.gd" id="1_banci"]
+
+[resource]
+script = ExtResource("1_banci")

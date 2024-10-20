@@ -1,0 +1,6 @@
+[gd_resource type="Resource" script_class="MerchantAbility" load_steps=2 format=3 uid="uid://crbvven3rqc1p"]
+
+[ext_resource type="Script" path="res://AttackScripts/merchant.gd" id="1_4msqs"]
+
+[resource]
+script = ExtResource("1_4msqs")

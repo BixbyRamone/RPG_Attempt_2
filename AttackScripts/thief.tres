@@ -1,0 +1,6 @@
+[gd_resource type="Resource" script_class="ThiefAbility" load_steps=2 format=3 uid="uid://dep2btuhuwvsm"]
+
+[ext_resource type="Script" path="res://AttackScripts/thief.gd" id="1_seidx"]
+
+[resource]
+script = ExtResource("1_seidx")

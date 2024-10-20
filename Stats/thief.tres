@@ -1,0 +1,6 @@
+[gd_resource type="Resource" script_class="ThiefStats" load_steps=2 format=3 uid="uid://cnqvmff8445ec"]
+
+[ext_resource type="Script" path="res://Stats/thief.gd" id="1_0jtf4"]
+
+[resource]
+script = ExtResource("1_0jtf4")

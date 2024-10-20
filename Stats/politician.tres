@@ -1,0 +1,6 @@
+[gd_resource type="Resource" script_class="PoliticianStats" load_steps=2 format=3 uid="uid://pq3ug3f67sv6"]
+
+[ext_resource type="Script" path="res://Stats/politician.gd" id="1_5xwfd"]
+
+[resource]
+script = ExtResource("1_5xwfd")
